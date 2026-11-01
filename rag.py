@@ -17,8 +17,9 @@ TOP_K = 3
 MIN_SCORE = 0.6   # we will tune this after testing
 
 # Load the index once, when the program starts
-vectors = np.load("index/vectors.npy")
-chunks = json.loads(Path("index/chunks.json").read_text(encoding="utf-8"))
+BASE = Path(__file__).parent
+vectors = np.load(BASE / "index" / "vectors.npy")
+chunks = json.loads((BASE / "index" / "chunks.json").read_text(encoding="utf-8"))
 
 
 def embed_query(question):
