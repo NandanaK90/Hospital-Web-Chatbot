@@ -4,8 +4,10 @@ from pathlib import Path
 
 import numpy as np
 import requests
+from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
 
+load_dotenv()   # reads the .env file and sets GEMINI_API_KEY
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 GEMINI_MODEL = "gemini-3.1-flash-lite"   # we will check this name in Step 2
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/{}:generateContent"
