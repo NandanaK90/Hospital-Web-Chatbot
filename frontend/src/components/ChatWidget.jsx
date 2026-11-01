@@ -1,5 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 
+// Empty on your computer (the Vite proxy handles /chat).
+// Online, this holds the backend address from VITE_API_URL.
+const API = import.meta.env.VITE_API_URL || "";
+
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);        // is the chat window open?
   const [input, setInput] = useState("");         // what the user is typing
@@ -25,7 +29,7 @@ export default function ChatWidget() {
     setLoading(true);
 
     try {
-      const response = await fetch("/chat", {
+      const response = await fetch(API + "/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question }),
