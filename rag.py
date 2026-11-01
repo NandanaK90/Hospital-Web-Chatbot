@@ -5,23 +5,42 @@ from pathlib import Path
 import numpy as np
 import requests
 from dotenv import load_dotenv
-from sentence_transformers import SentenceTransformer
 
-load_dotenv()   # reads the .env file and sets GEMINI_API_KEY
-EMBEDDING_MODEL = "all-MiniLM-L6-v2"
-GEMINI_MODEL = "gemini-3.1-flash-lite"   # we will check this name in Step 2
+load_dotenv()
+
+EMBED_MODEL = "gemini-embedding-001"
+EMBED_URL = "https://generativelanguage.googleapis.com/v1beta/models/{}:embedContent"
+DIMS = 768
+GEMINI_MODEL = "gemini-3.1-flash-lite"
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/{}:generateContent"
 TOP_K = 3
-MIN_SCORE = 0.25
+MIN_SCORE = 0.6   # we will tune this after testing
 
-# Load everything once, when the program starts
-embedder = SentenceTransformer(EMBEDDING_MODEL)
+# Load the index once, when the program starts
 vectors = np.load("index/vectors.npy")
 chunks = json.loads(Path("index/chunks.json").read_text(encoding="utf-8"))
 
 
+def embed_query(question):
+    api_key = os.environ.get("GEMINI_API_KEY")
+    response = requests.post(
+        EMBED_URL.format(EMBED_MODEL),
+        headers={"x-goog-api-key": api_key},
+        json={
+            "model": "models/" + EMBED_MODEL,
+            "content": {"parts": [{"text": question}]},
+            "taskType": "RETRIEVAL_QUERY",
+            "outputDimensionality": DIMS,
+        },
+        timeout=30,
+    )
+    response.raise_for_status()
+    vector = np.array(response.json()["embedding"]["values"], dtype="float32")
+    return vector / np.linalg.norm(vector)
+
+
 def retrieve(question, k=TOP_K):
-    q_vector = embedder.encode(question, normalize_embeddings=True)
+    q_vector = embed_query(question)
     scores = vectors @ q_vector
     best = np.argsort(scores)[::-1][:k]
     return [(chunks[i], float(scores[i])) for i in best]
@@ -45,13 +64,15 @@ def build_prompt(question, found):
         {"role": "system", "content": system},
         {"role": "user", "content": question},
     ]
+
+
 def ask_llm(messages):
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         return "No API key found. Set GEMINI_API_KEY first."
 
-    system_text = messages[0]["content"]   # the rules and the chunks
-    question = messages[-1]["content"]     # the user's question
+    system_text = messages[0]["content"]
+    question = messages[-1]["content"]
 
     try:
         response = requests.post(
@@ -71,7 +92,10 @@ def ask_llm(messages):
 
 
 def answer(question):
-    found = retrieve(question)
+    try:
+        found = retrieve(question)
+    except requests.exceptions.RequestException as error:
+        return f"Search error: {error}", []
 
     if found[0][1] < MIN_SCORE:
         return "Sorry, I don't have that information.", []
