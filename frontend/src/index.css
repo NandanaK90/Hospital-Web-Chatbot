@@ -1,0 +1,130 @@
+:root {
+  --blue-dark: #0f3b7a;
+  --blue: #1550a0;
+  --blue-light: #eef5fb;
+  --accent: #19a57a;
+  --text: #1c2b39;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+  background: white;
+  line-height: 1.5;
+}
+
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+/* ---------- Thin bar on top ---------- */
+.utility { background: var(--blue-dark); color: white; font-size: 14px; }
+.utility-inner { display: flex; justify-content: flex-end; align-items: center; gap: 28px; height: 40px; }
+.utility a { color: white; text-decoration: none; }
+.utility a:hover { text-decoration: underline; }
+
+/* ---------- Main bar ---------- */
+.mainbar { background: var(--blue); color: white; }
+.mainbar-inner { display: flex; justify-content: space-between; align-items: stretch; min-height: 82px; }
+
+.brand { display: flex; flex-direction: column; justify-content: center; color: white; text-decoration: none; }
+.brand-name { font-size: 28px; font-weight: bold; line-height: 1.1; }
+.brand-place { font-size: 12px; letter-spacing: 3px; margin-top: 4px; opacity: 0.9; }
+
+.mainnav { display: flex; align-items: stretch; }
+.nav-item { position: relative; display: flex; }
+.nav-item > a {
+  display: flex; align-items: center; gap: 10px; padding: 0 22px;
+  color: white; text-decoration: none; font-size: 16px; line-height: 1.2;
+  border-left: 1px solid rgba(255, 255, 255, 0.18);
+}
+.nav-item > a:hover { background: rgba(255, 255, 255, 0.1); }
+.nav-icon { font-size: 26px; }
+.caret { font-size: 12px; margin-left: 6px; }
+
+/* Dropdown menu: hidden until the mouse is over the item */
+.dropdown {
+  display: none; position: absolute; top: 100%; left: 0; min-width: 240px;
+  margin: 0; padding: 8px 0; list-style: none; background: white;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); z-index: 30;
+}
+.dropdown a { display: block; padding: 10px 18px; color: var(--text); text-decoration: none; }
+.dropdown a:hover { background: var(--blue-light); color: var(--blue); }
+.nav-item:hover .dropdown { display: block; }
+
+/* ---------- Banner ---------- */
+/* To use your own photo, replace the second gradient with: url("/hero.jpg") center / cover */
+.hero-banner {
+  background:
+    linear-gradient(90deg, rgba(8, 40, 90, 0.85), rgba(8, 40, 90, 0.45)),
+    linear-gradient(135deg, #3b7bbf, #7fb3df);
+  color: white;
+  padding: 18px 0 60px;
+}
+.breadcrumb { font-size: 14px; opacity: 0.85; margin-bottom: 40px; }
+.hero-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; }
+.hero-grid h1 { font-size: 40px; line-height: 1.2; margin: 0 0 12px; max-width: 520px; }
+.button {
+  display: inline-block; margin-top: 12px; padding: 12px 24px;
+  background: var(--accent); color: white; border-radius: 6px; text-decoration: none;
+}
+.button:hover { background: #148a67; }
+
+/* ---------- Enquiry form ---------- */
+.enquiry { background: #f2f2f2; color: var(--text); border-radius: 6px; padding: 28px; }
+.enquiry h2 { margin: 0 0 16px; color: var(--blue-dark); }
+.enquiry input, .enquiry select, .enquiry textarea {
+  width: 100%; padding: 12px 14px; margin-bottom: 12px; background: white;
+  border: 1px solid #cfd8e1; border-radius: 4px; font-size: 15px; font-family: inherit;
+}
+.enquiry button {
+  width: 100%; padding: 12px; border: none; border-radius: 4px;
+  background: var(--accent); color: white; font-size: 16px; cursor: pointer;
+}
+.enquiry button:hover { background: #148a67; }
+.thanks { color: var(--blue-dark); font-weight: bold; }
+
+/* ---------- Sections and cards ---------- */
+.section { padding: 40px 16px; }
+.section h2 { color: var(--blue-dark); margin-top: 0; }
+.dept-title { color: var(--blue); margin: 24px 0 10px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.card { border: 1px solid #dbe5ee; border-radius: 10px; padding: 16px; background: white; }
+.card h3 { margin: 0 0 6px; }
+
+.footer { background: var(--blue-dark); color: white; padding: 20px 0; margin-top: 30px; font-size: 14px; }
+
+/* ---------- Small screens ---------- */
+@media (max-width: 900px) {
+  .mainnav { display: none; }            /* a phone menu is a later step */
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-grid h1 { font-size: 30px; }
+  .utility-inner { gap: 14px; font-size: 12px; overflow-x: auto; }
+}
+/* ---------- Chat ---------- */
+.chat-fab {
+  position: fixed; right: 20px; bottom: 20px; padding: 14px 20px;
+  border: none; border-radius: 30px; background: var(--accent); color: white;
+  font-size: 15px; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+.chat-box {
+  position: fixed; right: 20px; bottom: 20px; width: 340px; max-width: calc(100vw - 24px);
+  height: 460px; max-height: calc(100vh - 40px); background: white;
+  border: 1px solid #cfdae5; border-radius: 12px; display: flex; flex-direction: column;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25); overflow: hidden; z-index: 40;
+}
+.chat-head {
+  background: var(--blue); color: white; padding: 12px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.chat-head button { background: none; border: none; color: white; font-size: 22px; cursor: pointer; }
+.chat-messages { flex: 1; overflow-y: auto; padding: 12px; background: #f6f9fc; }
+.msg { max-width: 85%; padding: 8px 12px; margin: 6px 0; border-radius: 10px; font-size: 14px; white-space: pre-wrap; }
+.msg.user { background: var(--blue); color: white; margin-left: auto; }
+.msg.bot { background: white; border: 1px solid #dbe5ee; }
+.src { font-size: 11px; color: #667; margin-top: 4px; }
+.chat-form { display: flex; gap: 6px; padding: 10px; border-top: 1px solid #dbe5ee; }
+.chat-form input { flex: 1; padding: 9px; border: 1px solid #c3d0dd; border-radius: 6px; font-size: 14px; }
+.chat-form button { padding: 9px 14px; border: none; border-radius: 6px; background: var(--blue); color: white; cursor: pointer; }
+.chat-form button:disabled { background: #8aa; }
